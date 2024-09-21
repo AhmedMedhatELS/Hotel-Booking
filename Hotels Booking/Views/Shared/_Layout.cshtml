@@ -1,0 +1,164 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Models;
+@inject SignInManager<ApplicationUser> SignInManager
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Hotels Booking</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Hotels_Booking.styles.css" asp-append-version="true" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Include Bootstrap Icons CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Include Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark text-white shadow-sm mb-4">
+            <div class="container">
+                <!-- Logo and Brand Name -->
+                <a class="navbar-brand fw-bold text-white" asp-area="Customer" asp-controller="Home" asp-action="Index">
+                    <img src="~/favicon.png" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
+                    Hotels Booking
+                </a>
+
+                <!-- Toggler for mobile view -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Links and Call to Action -->
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <!-- Left Side Navigation Links -->
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">                        
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="javascript:void(0)" @* asp-area="Customer" asp-controller="Booking" asp-action="Search" *@>
+                                <i class="bi bi-search me-1"></i> Search Hotels
+                            </a>
+                        </li>
+                        @if (!SignInManager.IsSignedIn(User) || User.IsInRole("User"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="Customer" asp-controller="Home" asp-action="Contact">
+                                    <i class="bi bi-telephone-fill me-1"></i> Contact Us
+                                </a>
+                            </li>
+                        }
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="Customer" asp-controller="Home" asp-action="Privacy">
+                                <i class="bi bi-shield-lock-fill me-1"></i> Privacy
+                            </a>
+                        </li>
+                        @if(User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                                    <i class="bi bi-shield-lock-fill me-1"></i> Dashboard
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("HotelManager"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="HotelManager" asp-controller="HotelManagement" asp-action="Index">
+                                    <i class="bi bi-shield-lock-fill me-1"></i> Hotel Management
+                                </a>
+                            </li>
+                        }
+                    </ul>                  
+
+                    <!-- Login Partial -->
+                    <partial name="_LoginPartial"></partial>
+                </div>
+            </div>
+        </nav>
+
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer bg-dark text-light pt-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <!-- About Section -->
+                <div class="col-md-4">
+                    <h5>About Us</h5>
+                    <p>We provide the best hotel booking service with top-rated hotels worldwide. Your comfort and satisfaction are our priority.</p>
+                    <a href="javascript:void(0)" class="text-light">Learn more</a>
+                </div>
+
+                <!-- Quick Links Section -->
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a asp-area="Customer" asp-controller="Home" asp-action="Index" class="text-light">Home</a></li>
+                        <li><a href="javascript:void(0)" @* asp-area="Customer" asp-controller="Booking" asp-action="Search" *@ class="text-light">Search Hotels</a></li>
+                        <li><a asp-area="Customer" asp-controller="Home" asp-action="Contact" class="text-light">Contact Us</a></li>
+                        <li><a href="javascript:void(0)" @* asp-area="Customer" asp-controller="Home" asp-action="FAQ" *@ class="text-light">FAQ</a></li>
+                        <li><a asp-area="Customer" asp-controller="Home" asp-action="Privacy" class="text-light">Privacy Policy</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info Section -->
+                <div class="col-md-4">
+                    <h5>Contact Us</h5>
+                    <p>Email: <a href="javascript:void(0)" class="text-light">support@hotelbooking.com</a></p>
+                    <p>Phone: +123 456 7890</p>
+                    <p>Address: 1234 Booking St, Hotel City, Country</p>
+
+                    <!-- Social Media Links -->
+                    <div class="social-icons">
+                        <a href="javascript:void(0)" class="text-light me-2"><i class="fab fa-facebook-f"></i></a>
+                        <a href="javascript:void(0)" class="text-light me-2"><i class="fab fa-twitter"></i></a>
+                        <a href="javascript:void(0)" class="text-light me-2"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="row mt-4">
+                <div class="col text-center">
+                    <p>&copy; 2024 - Hotels Booking. All Rights Reserved.</p>
+                    <p>
+                        <a href="javascript:void(0)" @* asp-area="Customer" asp-controller="Home" asp-action="Terms" *@ class="text-light">Terms & Conditions</a>
+                        |
+                      <a asp-area="Customer" asp-controller="Home" asp-action="Privacy" class="text-light">Privacy Policy</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    .container {
+        flex-grow: 1;
+    }
+
+    footer {
+        background-color: #f8f9fa; /* Optional styling */
+    }
+</style>

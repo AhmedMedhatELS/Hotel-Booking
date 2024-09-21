@@ -1,0 +1,127 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model Models.ViewModel.GalleyView
+
+@{
+    Layout = "_Dashboard";
+    ViewData["Title"] = "Manage Room Gallery";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">@ViewData["Title"]</h2>
+
+    <!-- Room Gallery Sections -->
+    <div class="accordion" id="roomGalleryAccordion">
+        @foreach (var room in Model.RoomList)
+        {
+            <div class="card shadow-sm mb-3">
+                <button class="btn btn-link text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@room.RoomID" aria-expanded="true" aria-controls="collapse-@room.RoomID">
+                    <div class="card-header bg-dark text-white" id="heading-@room.RoomID">
+                        <h5 class="mb-0" style="text-decoration:none;">
+                            Room Name : @room.Name
+                        </h5>
+                    </div>
+                </button>
+                <div id="collapse-@room.RoomID" class="collapse" aria-labelledby="heading-@room.RoomID" data-bs-parent="#roomGalleryAccordion">
+                    <div class="card-body">
+                        <!-- Main Image Section -->
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-header bg-secondary text-white text-center">
+                                <h6>Main Room Image</h6>
+                            </div>
+                            <div class="card-body text-center">
+                                <form asp-action="UploadRoomMainImage" enctype="multipart/form-data" method="post">
+                                    <div class="mb-4">
+                                        <img id="mainRoomImagePreview-@room.RoomID"
+                                             src="@Url.Content($"~/images/Rooms/{room.RoomGalleries.FirstOrDefault(g => g.IsMainImage)?.ImageName ?? "NoImage.png"}")"
+                                             class="img-fluid rounded"
+                                             alt="Room Main Image"
+                                             style="height: 200px;width: 400px; cursor: pointer;"
+                                             onclick="document.getElementById('MainImageFile-@room.RoomID').click();" />
+                                    </div>
+                                    <input type="hidden" name="RG.RoomId" value="@room.RoomID" />
+                                    <input type="file" required id="MainImageFile-@room.RoomID" name="RG.MainImageFile" accept="image/*" class="d-none" onchange="previewMainRoomImage(@room.RoomID, event)" />
+                                    <button type="submit" class="btn btn-dark">Save Main Image</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Additional Images Section -->
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-header bg-secondary text-white text-center">
+                                <h6>Room Gallery</h6>
+                            </div>
+                            <div class="card-body">
+                                <!-- Upload New Gallery Images -->
+                                <form asp-action="UploadRoomGalleryImages" enctype="multipart/form-data" method="post" class="mb-4">
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <input type="hidden" name="RG.RoomId" value="@room.RoomID" />
+                                            <input type="file" required id="ImageFiles-@room.RoomID" name="RG.ImageFiles" accept="image/*" class="form-control" multiple onchange="previewRoomGalleryImages(@room.RoomID, event)" />
+                                        </div>
+                                        <div class="col-md-3 text-end">
+                                            <button type="submit" class="btn btn-dark w-100">Upload Images</button>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <!-- Gallery Grid -->
+                                <div class="row">
+                                    @foreach (var galleryImage in room.RoomGalleries.Where(e => e.IsMainImage == false))
+                                    {
+                                        <div class="col-md-3 mb-4">
+                                            <div class="position-relative">
+                                                <img src="@Url.Content($"~/images/Rooms/{galleryImage.ImageName}")"
+                                                     class="img-fluid rounded shadow-sm" alt="Room Gallery Image"
+                                                     style="height:150px;width:250px;" />
+                                                <a asp-action="DeleteRoomGalleryImage" asp-route-id="@galleryImage.RoomGalleryId" class="position-absolute top-0 end-0 me-2 mt-2 text-danger">
+                                                    <i class="fas fa-trash-alt fa-lg"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Preview selected room main image
+        function previewMainRoomImage(roomId, event) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                var output = document.getElementById('mainRoomImagePreview-' + roomId);
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        // Preview selected room gallery images
+        function previewRoomGalleryImages(roomId, event) {
+            const files = event.target.files;
+            if (files) {
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const img = document.createElement("img");
+                        img.src = e.target.result;
+                        img.classList.add("img-fluid", "rounded", "shadow-sm", "mb-3");
+                        img.style.maxHeight = "150px";
+                        document.getElementById("galleryPreview-" + roomId).appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+    </script>
+}

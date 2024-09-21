@@ -1,0 +1,78 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using Models
+@using Utility
+
+@model IEnumerable<Hotel>
+
+@{
+    Layout = "_Dashboard";
+    ViewData["Title"] = "Hotel List";
+}
+
+<h2 class="text-center mb-4">Hotels Management</h2>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Hotel Name</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                var counter = 1;
+                foreach (var hotel in Model)
+                {
+                    <tr>
+                        <td>@counter</td>
+                        <td>@hotel.HotelName</td>
+                        <td>
+                            @if (hotel.Status == Status.InProgress)
+                            {
+                                <span class="badge bg-info text-dark">In Progress</span>
+                            }
+                            else if (hotel.Status == Status.Published)
+                            {
+                                <span class="badge bg-success text-dark">Published</span>
+                            }
+                            else if (hotel.Status == Status.AdminReview)
+                            {
+                                <span class="badge bg-warning text-dark">AdminReview</span>
+                            }
+                            else if (hotel.Status == Status.Adminsuspended)
+                            {
+                                <span class="badge bg-danger text-dark">Admin suspended</span>
+                            }
+                            else if (hotel.Status == Status.Managersuspended)
+                            {
+                                <span class="badge bg-danger text-dark">Manager suspended</span>
+                            }
+                        </td>
+                        <td>
+                            @if (hotel.Status != Status.InProgress)
+                            {
+                            <a href="@Url.Action("HotelDetail", "HotelAdminManagement", new { id = hotel.HotelId })" class="btn btn-info btn-sm">Details</a>
+                                <a href="javascript:void(0)" class="btn btn-primary btn-sm">Reservations</a>
+                            }
+                            <a href="javascript:void(0)" class="btn btn-danger btn-sm"
+                               onclick="return confirm('Are you sure you want to delete this hotel?');">Delete</a>
+                        </td>
+                    </tr>
+                    counter++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4" class="text-center">No hotels found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

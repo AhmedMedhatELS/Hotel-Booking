@@ -1,0 +1,45 @@
+﻿<nav id="sidebar" class="bg-dark">
+    <div class="sidebar-header text-center py-4">
+        <a href="@Url.Action("Index", "Dashboard", new { area = "Admin" })" class="navbar-brand text-light">
+            <img src="~/favicon.png" alt="Logo" width="30" height="30">
+            Admin Panel
+        </a>
+    </div>
+    <ul class="list-unstyled components">
+        <li>
+            <a asp-area="Customer" asp-controller="Home" asp-action="Index" class="text-light" style="text-decoration:none;">
+                <i class="fas fa-home"></i> Home
+            </a>
+        </li>
+        <li>
+            <a asp-area="Identity" asp-page="/Account/Register" class="text-light" style="text-decoration:none;">
+                <i class="fas fa-user-plus"></i> Add New Admin
+            </a>
+        </li>
+        <li>
+            <a asp-area="Admin" asp-controller="Dashboard" asp-action="NewContacts" class="text-light" style="text-decoration:none;">
+                <i class="fas fa-envelope"></i> New Contacts
+            </a>
+        </li>
+        <li>
+            <a asp-area="Admin" asp-controller="Dashboard" asp-action="ContactsHistory" class="text-light" style="text-decoration:none;">
+                <i class="fas fa-envelope"></i> Contacts Hostory
+            </a>
+        </li>
+        <li>
+            <a asp-area="Admin" asp-controller="Dashboard" asp-action="NewHotelRequest" class="text-light" style="text-decoration:none;">
+                <i class="fas fa-hotel"></i> Hotel Request
+            </a>
+        </li>
+        <li>
+            <a asp-area="Admin" asp-controller="Dashboard" asp-action="HotelRequestHistory" class="text-light" style="text-decoration:none;">
+                <i class="fas fa-hotel"></i> Hotel Request History
+            </a>
+        </li>
+        <li>
+            <a asp-area="Admin" asp-controller="HotelAdminManagement" asp-action="HotelList" class="text-light" style="text-decoration:none;">
+                <i class="fas fa-hotel"></i> Hotel List
+            </a>
+        </li>
+    </ul>
+</nav>

@@ -1,0 +1,153 @@
+﻿<div class="search-banner d-flex align-items-center p-1">
+    <img src="~/favicon.png" alt="Banner Image" class="me-3" style="width: 100px; height: auto;">
+    <div>
+        <h1 class="display-4" style="color:#3C3D37;">Find Your Next Stay</h1>
+        <p class="lead">Explore great deals on hotels, homes, and more, all at the best prices.</p>
+    </div>
+</div>
+
+<div class="container mt-1">
+    <!-- Search Form (optional) -->
+    <form method="get" action="#">
+        <div class="row mb-3 p-3 border rounded card-header bg-dark text-white">
+            <!-- Destination (States) -->
+            <div class="col-md-4">
+                <label for="destination" class="form-label">Where are you going?</label>
+                <select class="form-select" id="destination" name="destination" required>
+                    <option value="" disabled selected>Select State</option>
+                    <option value="1">California</option>
+                    <option value="2">Florida</option>
+                    <option value="3">New York</option>
+                </select>
+            </div>
+
+            <!-- Check-in and Check-out Dates -->
+            <div class="col-md-4">
+                <label for="checkin" class="form-label">Check-in date</label>
+                <input type="date" class="form-control" id="checkin" name="checkin" required>
+            </div>
+
+            <div class="col-md-4 d-flex align-items-end">
+                <div class="w-100 d-flex gap-2">
+                    <div class="flex-grow-1">
+                        <label for="checkout" class="form-label">Check-out date</label>
+                        <input type="date" class="form-control" id="checkout" name="checkout" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary align-self-end">Search</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!-- Hotel Results (Grid Layout) -->
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 d-flex flex-row align-items-center">
+                <!-- Hotel Image (Link) -->
+                <a href="#" class="h-100 flex-shrink-0">
+                    <img src="https://via.placeholder.com/150" class="card-img-left" style="width:150px; height:150px; object-fit: cover;" alt="Hotel Image">
+                </a>
+                <!-- Hotel Details -->
+                <div class="card-body">
+                    <h5 class="card-title"><a href="#" class="text-dark text-decoration-none">Le Meridien Cairo Airport</a></h5>
+                    <p class="text-muted mb-1">Heliopolis</p>
+                    <span class="badge bg-primary mb-2">8.5</span>
+                    <p class="mb-0"><strong>From</strong> <span class="text-primary">EGP 5,910.95</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 d-flex flex-row align-items-center">
+                <!-- Hotel Image (Link) -->
+                <a href="#" class="h-100 flex-shrink-0">
+                    <img src="https://via.placeholder.com/150" class="card-img-left" style="width:150px; height:150px; object-fit: cover;" alt="Hotel Image">
+                </a>
+                <!-- Hotel Details -->
+                <div class="card-body">
+                    <h5 class="card-title"><a href="#" class="text-dark text-decoration-none">Radisson Blu Hotel, Cairo Heliopolis</a></h5>
+                    <p class="text-muted mb-1">Heliopolis</p>
+                    <span class="badge bg-primary mb-2">7.8</span>
+                    <p class="mb-0"><strong>From</strong> <span class="text-primary">EGP 5,373.24</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add more hotel cards following the same structure -->
+    </div>
+</div>
+
+<!-- Hover Effect for Images -->
+<style>
+    .card-img-left {
+        transition: transform 0.3s ease;
+    }
+
+        .card-img-left:hover {
+            transform: scale(1.1); /* Enlarge image on hover */
+        }
+
+    .card {
+        border: none;
+    }
+
+    .card-body a {
+        text-decoration: none;
+        color: #000;
+    }
+
+        .card-body a:hover {
+            color: #007bff; /* Change color on hover */
+        }
+
+    .search-banner {
+        margin-bottom: 0px;
+        border-radius: 0px;
+    }
+
+        .search-banner h1 {
+            font-weight: 700;
+        }
+
+        .search-banner p {
+            color: #604CC3;
+            font-weight: 400;
+            font-size: 1.2rem;
+        }
+</style>
+
+<!-- JavaScript to Handle Date Logic -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get today's date in YYYY-MM-DD format
+        let today = new Date().toISOString().split('T')[0];
+
+        // Set the minimum date for check-in
+        let checkin = document.getElementById("checkin");
+        let checkout = document.getElementById("checkout");
+        checkin.setAttribute("min", today);
+
+        // Prevent selecting a check-out date earlier than the check-in date
+        checkin.addEventListener("change", function () {
+            let checkinDate = this.value;
+            checkout.setAttribute("min", checkinDate);
+
+            // If check-out date is set and it's earlier than the new check-in date, reset check-out date
+            if (checkout.value && checkout.value < checkinDate) {
+                checkout.value = "";
+                checkout.setAttribute("placeholder", "Select check-out date");
+            }
+        });
+
+        // Compare check-in and check-out dates if both are selected
+        checkout.addEventListener("change", function () {
+            let checkinDate = checkin.value;
+            let checkoutDate = checkout.value;
+
+            if (checkinDate && checkoutDate && checkoutDate < checkinDate) {
+                alert("Check-out date must be later than check-in date.");
+                checkout.value = ""; // Reset the check-out date if invalid
+            }
+        });
+    });
+</script>

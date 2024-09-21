@@ -1,0 +1,148 @@
+﻿@model Models.ViewModel.ContactView
+
+@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<div class="container mt-5">
+    <div class="row mb-4">
+        <!-- Button Container with Center Alignment and Full Width -->
+        <div class="col-12 d-flex justify-content-center">
+            <div class="row w-50">
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-dark w-100" onclick="ShowContact()">Contact Us</button>
+                </div>
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-dark w-100" onclick="ShowHotel()">Hotel Request</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h2 class="text-center mb-4" id="HeaderTitle">@ViewData["Title"]</h2>
+
+    <div id="confirm-contact-message" class="alert alert-success text-center" role="alert" style="display: none;">
+        @TempData["ConfirmContact"] 
+    </div>
+    <div class="row justify-content-center">
+        <!-- For Contact -->
+        <div id="ContactForm" class="col-md-8 col-lg-6" style="display:block;">
+            <form asp-area="Customer" asp-controller="Home" asp-action="CreateContact" method="post">
+                <div class="form-group mb-4">
+                    <label asp-for="Contact.Name" class="form-label fs-5">Name</label>
+                    <input asp-for="Contact.Name" class="form-control form-control-lg" placeholder="Enter your name" />
+                    <span asp-validation-for="Contact.Name" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="Contact.Message" class="form-label fs-5">Message</label>
+                    <textarea asp-for="Contact.Message" class="form-control form-control-lg" rows="6" placeholder="Enter your message"></textarea>
+                    <span asp-validation-for="Contact.Message" class="text-danger"></span>
+                </div>
+
+                <div class="text-center mb-3">
+                    <button type="submit" class="btn btn-dark btn-lg px-4 py-2">Submit</button>
+                </div>
+            </form>
+        </div>
+        <!-- For Hotel Request -->
+        <div id="HotelRequstForm" class="col-md-8 col-lg-6" style="display:none;">
+            <form asp-area="Customer" asp-controller="Home" asp-action="CreateHotelRequest" method="post">
+                <div class="form-group mb-4">
+                    <label asp-for="HotelRequest.HotelName" class="form-label fs-5">Hotel Name</label>
+                    <input asp-for="HotelRequest.HotelName" class="form-control form-control-lg" placeholder="Enter Hotel Name" />
+                    <span asp-validation-for="HotelRequest.HotelName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="HotelRequest.Stars" class="form-label fs-5">Hotel Stars</label>
+                    <input asp-for="HotelRequest.Stars" class="form-control form-control-lg" placeholder="Enter Hotel Stars" />
+                    <span asp-validation-for="HotelRequest.Stars" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="HotelRequest.LocationLink" class="form-label fs-5">Hotel Location</label>
+                    <input asp-for="HotelRequest.LocationLink" class="form-control form-control-lg" placeholder="Hotel Link Location" />
+                    <span asp-validation-for="HotelRequest.LocationLink" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="HotelRequest.Address" class="form-label fs-5">Hotel Address</label>
+                    <input asp-for="HotelRequest.Address" class="form-control form-control-lg" placeholder="Enter Hotel Address" />
+                    <span asp-validation-for="HotelRequest.Address" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="HotelRequest.HotelHotLine" class="form-label fs-5">Hotel HotLine</label>
+                    <input asp-for="HotelRequest.HotelHotLine" class="form-control form-control-lg" placeholder="Enter HotLine" />
+                    <span asp-validation-for="HotelRequest.HotelHotLine" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="HotelRequest.HotelContactEmail" class="form-label fs-5">Hotel ContactEmail</label>
+                    <input asp-for="HotelRequest.HotelContactEmail" class="form-control form-control-lg" placeholder="Enter ContactEmail" />
+                    <span asp-validation-for="HotelRequest.HotelContactEmail" class="text-danger"></span>
+                </div>
+
+                <!-- Select Menu for State Selection -->
+                <div class="form-group mb-4">
+                    <label for="stateId" class="form-label fs-5">Country, State</label>
+                    <select id="stateId" name="HotelRequest.StateId" class="form-control form-control-lg">
+                        @foreach (var state in Model.States)
+                        {
+                            <option value="@state.StateId">
+                                @(state.Country?.Name), @state.Name
+                            </option>
+                        }
+                    </select>                   
+                    <span asp-validation-for="HotelRequest.StateId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="HotelRequest.Message" class="form-label fs-5">Message</label>
+                    <textarea asp-for="HotelRequest.Message" class="form-control form-control-lg" rows="6" placeholder="Enter your message"></textarea>
+                    <span asp-validation-for="HotelRequest.Message" class="text-danger"></span>
+                </div>
+
+                <div class="text-center mb-3">
+                    <button type="submit" class="btn btn-dark btn-lg px-4 py-2">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+<script>
+    const ContactForm = document.getElementById("ContactForm");
+    const HotelRequstForm = document.getElementById("HotelRequstForm");
+    const HeaderTitle = document.getElementById("HeaderTitle");
+
+    function ShowContact() {
+        HotelRequstForm.style.display = "none";
+        ContactForm.style.display = "block";
+        HeaderTitle.innerHTML = "Contact Us";
+    }
+
+    function ShowHotel() {
+        HotelRequstForm.style.display = "block";
+        ContactForm.style.display = "none";
+        HeaderTitle.innerHTML = "Hotel Requst";
+    }
+
+        var confirmMessage = document.getElementById("confirm-contact-message");
+
+        if (confirmMessage.innerHTML.trim()) {
+            confirmMessage.style.display = "block";  // Show the message
+            setTimeout(function () {
+                confirmMessage.style.opacity = '0';
+            }, 1500); // Wait 1.5 seconds, then fade out
+
+            // Remove the element after the fade out for a smoother experience
+            setTimeout(function () {
+                confirmMessage.style.display = 'none';
+            }, 2500); // Hide after additional 1 second for full fade
+        }
+    
+</script>

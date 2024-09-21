@@ -1,0 +1,78 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Utility
+
+@model Models.ViewModel.HotelStatusView
+
+@{
+    Layout = "_Dashboard";
+    ViewData["Title"] = "Hotel Management";
+
+    var allConditionsMet =  Model.HotelMainImage &&
+                            Model.HotelImages >= 10 &&
+                            Model.HotelFacilities >= 5 &&
+                            Model.RoomsMainImages &&
+                            Model.AllRoomsHave_5_Images &&
+                            Model.AllRoomsHaveView &&
+                            Model.UnitAtLeast_10;
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h3>@Model.HotelName Status :   @Model.HotelStatus.ToString()         
+            </h3>
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <i class="bi @(Model.HotelMainImage ? " bi-check-circle text-success" : "bi-x-circle text-danger" )"></i>
+                    <span class="ms-2">Hotel has a main image</span>
+                </li>
+                <li class="list-group-item">
+                    <i class="bi @(Model.HotelImages >= 10 ? " bi-check-circle text-success" : "bi-x-circle text-danger" )"></i>
+                    <span class="ms-2">Hotel have at least 10 images</span>
+                </li>
+                <li class="list-group-item">
+                    <i class="bi @(Model.HotelFacilities >= 5 ? " bi-check-circle text-success" : "bi-x-circle text-danger" )"></i>
+                    <span class="ms-2">Hotel have at least 5 Facilities</span>
+                </li>
+                <li class="list-group-item">
+                    <i class="bi @(Model.RoomsMainImages ? " bi-check-circle text-success" : "bi-x-circle text-danger" )"></i>
+                    <span class="ms-2">All rooms have exactly one main image</span>
+                </li>
+                <li class="list-group-item">
+                    <i class="bi @(Model.AllRoomsHave_5_Images ? " bi-check-circle text-success" : "bi-x-circle text-danger" )"></i>
+                    <span class="ms-2">All rooms have at least 5 images</span>
+                </li>
+                <li class="list-group-item">
+                    <i class="bi @(Model.AllRoomsHaveView ? " bi-check-circle text-success" : "bi-x-circle text-danger" )"></i>
+                    <span class="ms-2">All rooms have at least one view</span>
+                </li>
+                <li class="list-group-item">
+                    <i class="bi @(Model.UnitAtLeast_10 ? " bi-check-circle text-success" : "bi-x-circle text-danger" )"></i>
+                    <span class="ms-2">Total number of room units is at least 10</span>
+                </li>
+            </ul>
+        </div>
+        <div class="card-footer">
+            @if(Model.HotelStatus != Status.Adminsuspended)
+            {
+                if (Model.HotelStatus == Status.InProgress || Model.HotelStatus == Status.AdminReview)
+                {
+                    <button class="btn btn-dark"
+                        @(allConditionsMet ? "" : "disabled")
+                        onclick="location.href='@Url.Action("AdminReview", new { id = Model.HotelId})'">
+                    @(Model.HotelStatus == Status.InProgress ? "Admin Review" : "Edit Mode")
+                    </button>
+                }
+                else
+                {
+                    <button class="btn btn-dark"
+                            onclick="location.href='@Url.Action("SuspendPublish", new { id = Model.HotelId })'">
+                        @(Model.HotelStatus == Status.Published ? "Suspend" : "Publish")
+                    </button>
+                }
+            }
+        </div>
+    </div>
+</div>

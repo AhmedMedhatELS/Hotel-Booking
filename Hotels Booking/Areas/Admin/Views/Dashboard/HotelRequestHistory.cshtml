@@ -1,0 +1,71 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Utility;
+@model List<Models.HotelRequest>
+
+@{
+    Layout = "_Dashboard";
+    ViewData["Title"] = "Hotel Request History";
+}
+
+<h2 class="text-center mb-4">Hotel Request History</h2>
+
+<div id="confirm-hotel-request-message" class="alert alert-success text-center" role="alert" style="display: none;">
+    @TempData["ConfirmReply"]
+</div>
+
+@foreach (var hotelRequest in Model)
+{
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <!-- User Profile Image and Name -->
+                <div class="col-md-2 text-center">
+                    <img src="~/images/Users/@(string.IsNullOrEmpty(hotelRequest.ApplicationUser?.ProfileImage) ? "profile-circle.svg" : hotelRequest.ApplicationUser.ProfileImage)" class="img-fluid rounded-circle mb-3" alt="User Profile" width="150px;" height="150px;">
+                    <h5 class="card-title">@hotelRequest.ApplicationUser?.FullName</h5>
+                </div>
+
+                <!-- Hotel Request Information -->
+                <div class="col-md-8">
+                    <p class="card-text"><strong>Hotel Name:</strong> @hotelRequest.HotelName</p>
+                    <p class="card-text"><strong>Stars:</strong> @hotelRequest.Stars</p>
+                    <p class="card-text"><strong>Location Link:</strong> <a href="@hotelRequest.LocationLink" target="_blank">@hotelRequest.LocationLink</a></p>
+                    <p class="card-text"><strong>Address:</strong> @hotelRequest.Address</p>
+                    <p class="card-text"><strong>Hotline:</strong> @hotelRequest.HotelHotLine</p>
+                    <p class="card-text"><strong>Contact Email:</strong> <a href="mailto:@hotelRequest.HotelContactEmail">@hotelRequest.HotelContactEmail</a></p>
+                    <p class="card-text"><strong>State:</strong> @(hotelRequest.State.Country?.Name + "," + hotelRequest.State.Name)</p>
+                    <p class="card-text"><strong>Message:</strong> @hotelRequest.Message</p>
+                    <p class="card-text @(hotelRequest.Status == Status.Approved ? "text-success" : "text-danger")"><strong>Stutes:</strong> @hotelRequest.Status.ToString()</p>
+
+                        <div class="form-group  mb-2">
+                            <textarea readonly class="form-control" rows="4" >@hotelRequest.Reply</textarea>
+                        </div>
+                        
+                </div>
+
+                <!-- Delete Button -->
+                <div class="col-md-2 d-flex align-items-start justify-content-end">
+                    <a class="btn btn-danger" href="~/Admin/Dashboard/DeleteHotelRequest?HotelRequestId=@hotelRequest.HotelRequestId&ViewNavigation=@Utility.ViewNavigation.HotelRequestHistory">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+<script>
+    var confirmMessage = document.getElementById("confirm-hotel-request-message");
+
+    if (confirmMessage.innerHTML.trim()) {
+        confirmMessage.style.display = "block";  // Show the message
+        setTimeout(function () {
+            confirmMessage.style.opacity = '0';
+        }, 1500); // Wait 1.5 seconds, then fade out
+
+        // Remove the element after the fade out for a smoother experience
+        setTimeout(function () {
+            confirmMessage.style.display = 'none';
+        }, 2500); // Hide after additional 1 second for full fade
+    }
+</script>

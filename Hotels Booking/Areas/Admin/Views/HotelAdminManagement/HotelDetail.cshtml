@@ -1,0 +1,253 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Utility
+@model Models.Hotel
+
+@{
+    Layout = "_Dashboard";
+    ViewData["Title"] = "Hotel Details";
+}
+
+<!-- Hidden form for updating hotel status -->
+<form asp-action="UpdateHotelStatus" method="post">
+    <input type="hidden" asp-for="HotelId" />
+    <div class="form-group">
+        <label for="Status">Change Hotel Status</label>
+        <select asp-for="Status" class="form-control" required>
+            <option value="">Choose Status</option>
+            <option value="@Status.Published">Published</option>
+            <option value="@Status.Adminsuspended">Admin suspended</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-dark mt-2">Update Status</button>
+</form>
+
+<!-- Hotel Details -->
+<div class="hotel-details mt-4">
+    <h2 class="hotel-name text-center">@Model.HotelName</h2>
+
+    <!-- Main Image and Gallery -->
+    <div class="main-image-gallery ">
+        <div class="main-image-frame" style="width:500px;height:500px">
+            <h3 class="card-header bg-dark text-white mb-2">Main Image</h3>
+            @if (Model.HotelGalleries != null && Model.HotelGalleries.Any())
+            {
+                var mainImage = Model.HotelGalleries.FirstOrDefault(i => i.IsMainImage);
+                if (mainImage != null)
+                {
+                    <img style="width:500px;height:400px" src="~/images/Hotels/@mainImage.ImageName" alt="Main Image" class="main-hotel-image" />
+                }
+                else
+                {
+                    <p>No main image available.</p>
+                }
+            }
+            else
+            {
+                <p>No images available.</p>
+            }
+        </div>
+
+        <div class="gallery-section" style="width:500px;height:500px">
+            <h3 class="card-header bg-dark text-white mb-2">Hotel Gallery</h3>
+            @if (Model.HotelGalleries != null && Model.HotelGalleries.Any())
+            {
+                <div id="hotelGalleryCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        @foreach (var galleryImage in Model.HotelGalleries)
+                        {
+                            <div class="carousel-item @(galleryImage.IsMainImage ? "active" : "")">
+                                <img style="width:550px;height:500px" src="~/images/Hotels/@galleryImage.ImageName" alt="Gallery Image" class="d-block" />
+                            </div>
+                        }
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#hotelGalleryCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#hotelGalleryCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            }
+            else
+            {
+                <p>No gallery images available.</p>
+            }
+        </div>
+    </div>
+
+    <!-- Hotel Details -->
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5 class="card-header bg-dark text-white mb-2 text-center">Hotel Details</h5>
+            <p><strong>Address:</strong> @Model.Address</p>
+            <p><strong>Stars:</strong> @Model.Stars</p>
+            <p><strong>Contact Email:</strong> @Model.HotelContactEmail</p>
+            <p><strong>Hotline:</strong> @Model.HotelHotLine</p>
+            <p><strong>Status:</strong> @Model.Status</p>
+            <p><strong>State:</strong> @Model.State.Country.Name , @Model.State.Name </p>
+        </div>
+    </div>
+</div>
+
+<!-- Rooms Section -->
+<div class="rooms-section mt-5">
+    <h3 class="text-center"><strong>Rooms</strong></h3>
+    @if (Model.Rooms != null && Model.Rooms.Any())
+    {
+        @foreach (var room in Model.Rooms)
+        {
+            <div class="accordion mb-3" id="roomAccordion@room.RoomID">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading@room.RoomID">
+                        <button class="accordion-button card-header bg-dark text-white mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@room.RoomID" aria-expanded="false" aria-controls="collapse-@room.RoomID">
+                            <strong> Room : @room.Name </strong>
+                        </button>
+                    </h2>
+                    <div id="collapse-@room.RoomID" class="accordion-collapse collapse" aria-labelledby="heading-@room.RoomID" data-bs-parent="#roomAccordion-@room.RoomID">
+                        <div class="accordion-body">
+                            <!-- Main Room Image and Gallery -->
+                            <div class="room-main-gallery">
+                                <div class="room-main-image " style="width:500px;height:500px">
+                                    <h4 class="card-header bg-dark text-white mb-2">Main Room Image</h4>
+                                    @if (room.RoomGalleries != null && room.RoomGalleries.Any())
+                                    {
+                                        <img style="width:500px;height:400px" src="~/images/Rooms/@room.RoomGalleries.FirstOrDefault(i => i.IsMainImage)?.ImageName" alt="Room Main Image" class="main-room-image mb-2" />
+                                    }
+                                    else
+                                    {
+                                        <p>No main image available.</p>
+                                    }
+                                </div>
+
+                                <div class="room-gallery  style=" width:500px;height:500px"">
+                                    <h4 class="card-header bg-dark text-white mb-2">Room Gallery</h4>
+                                    @if (room.RoomGalleries != null && room.RoomGalleries.Any(e => !e.IsMainImage))
+                                    {
+                                        <div class="gallery-thumbnails">
+                                            @foreach (var image in room.RoomGalleries.Where(e => !e.IsMainImage))
+                                            {
+                                                <img src="~/images/Rooms/@image.ImageName" class="thumbnail" alt="Room Gallery Image" />
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <p>No additional images available.</p>
+                                    }
+                                </div>
+                            </div>
+
+                            <!-- Room Details -->
+                            <div class="card mt-4 mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-header bg-dark text-white mb-2 text-center">Room Details</h5>
+                                    <p><strong>Beds Number:</strong> @room.BedsNumber </p>
+                                    <p><strong>Max Persons:</strong> @room.MaxPersons </p>
+                                    <p><strong>Square Meter:</strong> @room.SquareMeter </p>
+                                    <p><strong>Description:</strong> @room.Description </p>
+                                </div>
+                            </div>                            
+
+                            <!-- Room Views & Pricing -->
+                            <h5 class="card-header bg-dark text-white mb-2 text-center"><strong>Room Views & Pricing</strong></h5>
+                            @if (room.RoomViews != null && room.RoomViews.Any())
+                            {
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Location View</th>
+                                            <th>Price</th>
+                                            <th>Number of Units</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var roomView in room.RoomViews)
+                                        {
+                                            <tr>
+                                                <td>@roomView.LocationView?.Name</td>
+                                                <td>@roomView.Price</td>
+                                                <td>@roomView.NumberRooms</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+                                <p>No room views available.</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>No rooms available.</p>
+    }
+</div>
+
+<style>
+    .hotel-name {
+        font-size: 2em;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .main-image-gallery,
+    .room-main-gallery {
+        display: flex;
+        gap: 20px;
+    }
+
+    .main-image-frame,
+    .room-main-image {
+        flex: 1;
+        text-align: center;
+        padding: 15px;
+        border: 1px solid #ddd;
+        background-color: #f9f9f9;
+    }
+
+    .gallery-section,
+    .room-gallery {
+        flex: 1;
+        text-align: center;
+        padding: 15px;
+        border: 1px solid #ddd;
+        background-color: #f9f9f9;
+    }
+
+    .main-hotel-image,
+    .main-room-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+
+    .carousel-inner img {
+        max-height: 400px;
+        object-fit: cover;
+    }
+
+    .thumbnail {
+        width: 100px;
+        height: 100px;
+        margin: 5px;
+        cursor: pointer;
+        border-radius: 8px;
+        object-fit: cover;
+    }
+
+    .accordion-button {
+        background-color: #e9ecef;
+    }
+
+        .accordion-button:not(.collapsed) {
+            color: #0d6efd;
+            background-color: #e9ecef;
+        }
+</style>

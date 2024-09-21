@@ -1,0 +1,67 @@
+﻿<nav id="sidebar" class="bg-dark">
+    <div class="sidebar-header text-center py-4">
+        <a href="@Url.Action("Index", "HotelManagement", new { area = "HotelManager" })" class="navbar-brand text-light">
+            <img src="~/favicon.png" alt="Logo" width="30" height="30">
+            Hotel Panel
+        </a>
+    </div>
+    <ul class="list-unstyled components">
+        <li>
+            <a asp-area="Customer" asp-controller="Home" asp-action="Index" class="text-light" style="text-decoration:none;">
+                <i class="fas fa-home"></i> Home
+            </a>
+        </li>
+        <li>
+            <a asp-area="Identity" asp-page="/Account/Register" class="text-light" style="text-decoration:none;">
+                <i class="fas fa-user-plus"></i> Add New Manager
+            </a>
+        </li>
+        <!-- HotelManager Layout Dropdown -->
+        <li class="nav-item">
+            <a class="nav-link text-light dropdown-toggle" href="#" id="hotelDataDropdown" role="button" data-bs-toggle="collapse" data-bs-target="#hotelDataMenu" aria-expanded="false" aria-controls="hotelDataMenu">
+                <i class="fas fa-hotel"></i> Hotel Data
+            </a>
+            <ul class="collapse list-unstyled" id="hotelDataMenu">
+                <li>
+                    <a class="nav-link text-light" asp-area="HotelManager" asp-controller="HotelData" asp-action="HotelGeneralData">
+                        <i class="fas fa-info-circle"></i> Hotel General Data
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link text-light" asp-area="HotelManager" asp-controller="HotelData" asp-action="HotelFacilities">
+                        <i class="fas fa-concierge-bell"></i> Hotel Facilities
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link text-light" asp-area="HotelManager" asp-controller="HotelData" asp-action="HotelGallery">
+                        <i class="fas fa-images"></i> Hotel Gallery
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- RoomManager Layout Dropdown -->
+        <li class="nav-item">
+            <a class="nav-link text-light dropdown-toggle" href="#" id="roomDataDropdown" role="button" data-bs-toggle="collapse" data-bs-target="#roomDataMenu" aria-expanded="false" aria-controls="roomDataMenu">
+                <i class="fas fa-bed"></i> Rooms Data
+            </a>
+            <ul class="collapse list-unstyled" id="roomDataMenu">
+                <li>
+                    <a class="nav-link text-light" asp-area="HotelManager" asp-controller="RoomData" asp-action="RoomGeneralData">
+                        <i class="fas fa-info-circle"></i> Rooms General Data
+                    </a>
+                </li>               
+                <li>
+                    <a class="nav-link text-light" asp-area="HotelManager" asp-controller="RoomData" asp-action="RoomGallery">
+                        <i class="fas fa-images"></i> Rooms Gallery
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link text-light" asp-area="HotelManager" asp-controller="RoomData" asp-action="RoomViewManagement">
+                        <i class="fas fa-eye"></i> Rooms View Management
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</nav>

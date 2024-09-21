@@ -1,0 +1,107 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model Models.ViewModel.GalleyView
+
+@{
+    Layout = "_Dashboard";
+    ViewData["Title"] = "Manage Hotel Gallery";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">@ViewData["Title"]</h2>
+
+    <!-- Main Image Section -->
+    <div class="card shadow-sm mb-5">
+        <div class="card-header bg-dark text-white text-center">
+            <h5>Main Hotel Image</h5>
+        </div>
+        <div class="card-body text-center">
+            <form asp-action="UploadMainImage" enctype="multipart/form-data" method="post">
+                <div class="mb-4">
+                    <img id="mainImagePreview"
+                         src="@(!string.IsNullOrEmpty(Model.MainImageName) ? Url.Content($"~/images/Hotels/{Model.MainImageName}") : Url.Content("~/images/Hotels/NoImage.png"))"
+                         class="img-fluid rounded"
+                         alt="Main Image"
+                         style="height: 300px;width: 600px; cursor: pointer;"
+                         onclick="document.getElementById('MainImageFile').click();" />
+                </div>
+
+                <input type="file" required id="MainImageFile" name="MainImageFile" accept="image/*" class="d-none" onchange="previewMainImage(event)" />
+                <button type="submit" class="btn btn-dark">Save Main Image</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Additional Images Section -->
+    <div class="card shadow-sm mb-5">
+        <div class="card-header bg-dark text-white text-center">
+            <h5>Hotel Gallery</h5>
+        </div>
+        <div class="card-body">
+            <!-- Upload New Gallery Images -->
+            <form asp-action="UploadGalleryImages" enctype="multipart/form-data" method="post" class="mb-4">
+                <div class="row">
+                    <div class="col-md-9">
+                        <input type="file" required id="ImageFiles" name="ImageFiles" accept="image/*" class="form-control" multiple onchange="previewGalleryImages(event)" />
+                    </div>
+                    <div class="col-md-3 text-end">
+                        <button type="submit" class="btn btn-dark w-100">Upload Images</button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Gallery Grid -->
+            <div class="row">
+                @foreach (var galleryImage in Model.HotelGalleryList)
+                {
+                    <div class="col-md-3 mb-4">
+                        <div class="position-relative">
+                            <img src="@Url.Content($"~/images/Hotels/{galleryImage.ImageName}")"
+                            class="img-fluid rounded shadow-sm" alt="Gallery Image"
+                            style="height:200px;width:300px;"/>
+                            <a asp-action="DeleteGalleryImage" asp-route-id="@galleryImage.HotelGalleryId" class="position-absolute top-0 end-0 me-2 mt-2 text-danger">
+                                <i class="fas fa-trash-alt fa-lg"></i>
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Preview selected main image
+        function previewMainImage(event) {
+            var reader = new FileReader();
+            reader.onload = function(){
+                var output = document.getElementById('mainImagePreview');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        // Preview selected gallery images
+        function previewGalleryImages(event) {
+            const files = event.target.files;
+            if (files) {
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.createElement("img");
+                        img.src = e.target.result;
+                        img.classList.add("img-fluid", "rounded", "shadow-sm", "mb-3");
+                        img.style.maxHeight = "150px";
+                        document.getElementById("galleryPreview").appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+    </script>
+}

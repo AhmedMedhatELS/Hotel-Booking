@@ -1,0 +1,154 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model Models.ViewModel.HotelRoomView
+
+@{
+    Layout = "_Dashboard";
+    ViewData["Title"] = "Rooms General Data";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center">@ViewData["Title"]</h2>
+
+    <!-- Add New Room Form -->
+    <div class="mb-5">
+        <h3 class="mb-4">Add New Room</h3>
+        <form asp-action="AddRoom" method="post">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label asp-for="Room.Description" class="form-label">Description</label>
+                    <textarea asp-for="Room.Description" class="form-control" rows="2" placeholder="Enter room description"></textarea>
+                    <span asp-validation-for="Room.Description" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-2">
+                    <label asp-for="Room.BedsNumber" class="form-label">Beds Number</label>
+                    <input asp-for="Room.BedsNumber" type="number" class="form-control" placeholder="Enter number of beds" />
+                    <span asp-validation-for="Room.BedsNumber" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-2">
+                    <label asp-for="Room.MaxPersons" class="form-label">Max Persons</label>
+                    <input asp-for="Room.MaxPersons" type="number" class="form-control" placeholder="Enter max persons" />
+                    <span asp-validation-for="Room.MaxPersons" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-2">
+                    <label asp-for="Room.SquareMeter" class="form-label">Square Meter</label>
+                    <input asp-for="Room.SquareMeter" type="number" class="form-control" placeholder="Enter square meter" />
+                    <span asp-validation-for="Room.SquareMeter" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-2">
+                    <label asp-for="Room.RoomTypeId" class="form-label">Room Type</label>
+                    <select asp-for="Room.RoomTypeId" class="form-select">
+                        <option value="">Select Room Type</option>
+                        @foreach (var roomType in Model.RoomsTypes)
+                        {
+                            <option value="@roomType.RoomTypeId">@roomType.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Room.RoomTypeId" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-2">
+                    <label asp-for="Room.Name" class="form-label">Room Name</label>
+                    <input asp-for="Room.Name" type="text" class="form-control" placeholder="Enter Room Name" />
+                    <span asp-validation-for="Room.Name" class="text-danger"></span>
+                </div>
+
+                <div class="text-end mt-3">
+                    <button type="submit" class="btn btn-dark">Add Room</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Existing Rooms -->
+    @if (Model.Rooms != null && Model.Rooms.Count > 0)
+    {
+        <div class="accordion" id="roomsAccordion">
+            @for (int i = 0; i < Model.Rooms.Count; i++)
+            {
+                var room = Model.Rooms[i];
+                <div class="accordion-item mb-3 shadow-sm">
+                    <h2 class="accordion-header" id="heading-@i">
+                        <button class="accordion-button collapsed rounded-0 border-0 bg-light text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@i" aria-expanded="false" aria-controls="collapse-@i">
+                            Room Name: @room.Name
+                        </button>
+                    </h2>
+                    <div id="collapse-@i" class="accordion-collapse collapse" aria-labelledby="heading-@i" data-bs-parent="#roomsAccordion">
+                        <div class="accordion-body">
+                            <form asp-action="EditRoom" method="post" class="row g-3">
+                                <input type="hidden" asp-for="Room.RoomID" value="@room.RoomID" />
+                                <div class="col-md-4">
+                                    <label asp-for="Room.Description" class="form-label">Description</label>
+                                    <textarea name="Room.Description" class="form-control" rows="2" id="Description-@room.RoomID">@room.Description</textarea>
+                                    <span asp-validation-for="Room.Description" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label asp-for="Room.BedsNumber" class="form-label">Beds Number</label>
+                                    <input asp-for="Room.BedsNumber" type="number" class="form-control" value="@room.BedsNumber" />
+                                    <span asp-validation-for="Room.BedsNumber" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label asp-for="Room.MaxPersons" class="form-label">Max Persons</label>
+                                    <input asp-for="Room.MaxPersons" type="number" class="form-control" value="@room.MaxPersons" />
+                                    <span asp-validation-for="Room.MaxPersons" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label asp-for="Room.SquareMeter" class="form-label">Square Meter</label>
+                                    <input asp-for="Room.SquareMeter" type="number" class="form-control" value="@room.SquareMeter" />
+                                    <span asp-validation-for="Room.SquareMeter" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label asp-for="Room.RoomTypeId" class="form-label">Room Type</label>
+                                    <select asp-for="Room.RoomTypeId" class="form-select">
+                                        <option value="">Select Room Type</option>
+                                        @foreach (var roomType in Model.RoomsTypes)
+                                        {
+                                            if (roomType.RoomTypeId == room.RoomTypeId)
+                                            {
+                                                <option value="@roomType.RoomTypeId" selected>@roomType.Name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@roomType.RoomTypeId">@roomType.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                    <span asp-validation-for="Room.RoomTypeId" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label asp-for="Room.Name" class="form-label">Room Name</label>
+                                    <input asp-for="Room.Name" type="text" class="form-control" value="@room.Name" />
+                                    <span asp-validation-for="Room.Name" class="text-danger"></span>
+                                </div>
+
+                                <div class="text-end mt-3 d-flex justify-content-between">
+                                    <button type="submit" class="btn btn-success">Update</button>
+                                    <a  asp-action="DeleteRoom" asp-route-id="@room.RoomID"  class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this room?');">Delete</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info" role="alert">
+            No rooms available.
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

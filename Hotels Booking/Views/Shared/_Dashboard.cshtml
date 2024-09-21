@@ -1,0 +1,144 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Models
+@using DataAccess.Repository.IRepository
+@using DataAccess.Repository
+
+@inject SignInManager<ApplicationUser> SignInManager
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Hotels Booking</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Include Bootstrap Icons CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Include Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-wrapper d-flex">
+        <!-- Sidebar -->
+        @{
+            if(User.IsInRole("Admin"))
+            {
+                 <partial name="_AdminPartial" />
+            }
+            else if(User.IsInRole("HotelManager"))
+            {
+                 <partial name="_HotelManagerPartial" />
+            }
+        }       
+        <!-- Page Content -->
+        <div id="content" class="w-100">
+            <!-- Top Navbar -->
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm mb-4">
+                <div class="container-fluid">
+         
+                    <div style="margin-left:-250px;">
+                        @if (User.IsInRole("HotelManager"))
+                        {
+                            <h3 class="text-danger">@TempData["EditData"]</h3>
+                        }
+                    </div>
+                    <!-- Login Partial -->
+                    <partial name="_LoginPartial"></partial> <!-- Reusing the partial for user controls -->
+                </div>
+            </nav>
+
+            <div class="page-wrapper">
+                <div class="container-fluid">
+                    <main role="main" class="pb-3">
+                        @RenderBody() <!-- All view content will be placed here -->
+                    </main>
+                </div>
+            </div>
+        </div>
+    </div> <!-- End of Admin Wrapper -->
+
+    <footer class="footer bg-dark text-light text-center py-3">
+        <div class="container">
+            <span>&copy; 2024 Hotels Booking. All Rights Reserved.</span>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+<!-- Admin CSS in site.css or separate admin.css file -->
+<style>
+    /* General layout adjustments */
+    .admin-wrapper {
+        display: flex;
+        flex-direction: row;
+        min-height: 100vh;
+    }
+
+    #sidebar {
+        width: 250px;
+        position: fixed;
+        min-height: 100vh;
+        background-color: #343a40;
+    }
+
+    #content {
+        margin-left: 250px; /* Give content a margin to account for the fixed sidebar */
+        padding: 20px;
+        width: 100%;
+        transition: margin-left 0.3s ease;
+    }
+
+    /* Adjust content and sidebar when sidebar is collapsed */
+    #sidebar.active {
+        margin-left: -250px; /* Hide the sidebar */
+    }
+
+    #content.active {
+        margin-left: 0; /* Make the content full-width when sidebar is hidden */
+    }
+
+    /* Navbar styling adjustments */
+    .navbar {
+        padding-left: 250px; /* Ensure navbar content doesn't overlap with sidebar */
+        transition: padding-left 0.3s ease;
+    }
+
+    #content.active .navbar {
+        padding-left: 0; /* Remove padding when sidebar is collapsed */
+    }
+
+    /* Sidebar links styling */
+    #sidebar ul.components {
+        padding: 0;
+    }
+
+    #sidebar ul li a {
+        padding: 10px 15px;
+        font-size: 16px;
+        color: #ffffff;
+        display: block;
+    }
+
+        #sidebar ul li a:hover {
+            background-color: #495057;
+        }
+
+    /* Footer adjustments */
+    footer {
+        background-color: #343a40;
+        color: white;
+        padding: 1rem 0;
+        width: 100%;
+        position: relative;
+        bottom: -65px;
+        text-align:end !important;
+    }
+
+</style>
