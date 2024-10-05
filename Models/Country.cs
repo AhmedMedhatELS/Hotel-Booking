@@ -14,6 +14,7 @@ namespace Models
         #endregion
         #region Relations
         public ICollection<State> State { get; set; } = [];
+        public ICollection<Reservation> Reservations { get; set; } = [];
         #endregion
     }
 }

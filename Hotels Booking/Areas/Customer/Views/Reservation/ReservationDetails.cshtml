@@ -1,0 +1,163 @@
+﻿@model Models.ViewModel.ReservationDetailsView
+
+@{
+    ViewData["Title"] = "Reservation Details";
+}
+
+<div class="container my-4">
+
+    <!-- Header with custom style -->
+    <div class="header-section text-center mb-4">
+        <h1 class="display-4">Reservation Details</h1>
+        <p class="lead">Please review your reservation details and provide your information.</p>
+    </div>
+
+    <div class="row">
+        <!-- Left Side: Hotel & Reservation Details -->
+        <div class="col-md-4">
+            <!-- Hotel Details Card -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-dark">
+                    <h5 class="m-0 text-white">Hotel Details</h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-title"> @Model.HotelName </h6>
+                    <p><strong>Address:</strong> <a href="@Model.HotelLocation" target="_blank" class="text-decoration-none"> @Model.HotelAddress </a></p>
+                    <p><strong>Stars:</strong> @for (var i = 0; i < Model.HotelStars; i++)
+                        {
+                            <span>⭐</span>
+                        }</p>
+                </div>
+            </div>
+
+            <!-- Reservation Details Card -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-dark">
+                    <h5 class="m-0 text-white">Reservation Details</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Check-in:</strong> <span class="text-muted">@Model.GuestInformation.ReservationFormView.CheckInDate.ToString("yyyy-MM-dd")</span></p>
+                    <p><strong>Check-out:</strong> <span class="text-muted">@Model.GuestInformation.ReservationFormView.CheckOutDate.ToString("yyyy-MM-dd")</span></p>
+                    <p><strong>Nights:</strong> <span class="text-muted">@Model.NumberNights</span></p>
+                    <p><strong>Rooms:</strong> <span class="text-muted">@Model.NumberRooms Rooms</span></p>
+                    <p><strong>Room Types:</strong></p>
+                    <ul>
+                        @foreach(var roomview in Model.Rooms)
+                        {
+                            <li><span class="text-muted">@roomview</span></li>
+                        }
+                    </ul>
+                    <p><strong>Total Price:</strong> <span class="text-muted">$@Model.GuestInformation.ReservationFormView.Total</span></p>
+                    <form asp-controller="Home" asp-action="RoomFiltration" method="post">
+                        <!-- Hidden inputs for Check-in date, Check-out date, Number of rooms, etc. -->
+                        <input type="hidden" name="CheckInDate" value="@Model.GuestInformation.ReservationFormView.CheckInDate">
+                        <input type="hidden" name="CheckOutDate" value="@Model.GuestInformation.ReservationFormView.CheckOutDate">
+                        <input type="hidden" name="HotelId" value="@Model.GuestInformation.ReservationFormView.HotelId">
+                        <!-- Visible button to submit the form -->
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn btn-outline-dark">Change Your Reservation</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: User Information Form -->
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark">
+                    <h5 class="m-0 text-white">Guest Information</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-controller="Payment" asp-action="Pay" method="post">
+
+                        <!-- Hidden Input -->
+                        <input type="hidden" name="GuestInformation.ReservationFormView.RoomViewData" value="@Model.GuestInformation.ReservationFormView.RoomViewData" />
+                        <input type="hidden" name="GuestInformation.ReservationFormView.CheckInDate" value="@Model.GuestInformation.ReservationFormView.CheckInDate.ToString("yyyy-MM-dd")" />
+                        <input type="hidden" name="GuestInformation.ReservationFormView.CheckOutDate" value="@Model.GuestInformation.ReservationFormView.CheckOutDate.ToString("yyyy-MM-dd")" />
+                        <input type="hidden" name="GuestInformation.ReservationFormView.Total" value="@Model.GuestInformation.ReservationFormView.Total" />
+                        <input type="hidden" name="GuestInformation.ReservationFormView.HotelId" value="@Model.GuestInformation.ReservationFormView.HotelId" />
+                        <!-- End Of Hidden Data -->
+
+                        <div class="mb-3">
+                            <label for="guestName" class="form-label">Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="guestName" asp-for="GuestInformation.Name">
+                            <span class="text-danger" asp-validation-for="GuestInformation.Name"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                            <input type="tel" class="form-control" id="phone" asp-for="GuestInformation.PhoneNumber">
+                            <span class="text-danger" asp-validation-for="GuestInformation.PhoneNumber"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" id="email" asp-for="GuestInformation.Email">
+                            <span class="text-danger" asp-validation-for="GuestInformation.Email"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="country" class="form-label">Country <span class="text-muted">(optional)</span></label>
+                            <select class="form-select" id="country" asp-for="GuestInformation.CounteryId">
+                                <option value="" selected>Select your country</option>
+                                @foreach(var countery in Model.Countries)
+                                {
+                                    if(countery.CountryId == Model.GuestInformation.CounteryId)
+                                    {
+                                        <option selected value="@countery.CountryId">@countery.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@countery.CountryId">@countery.Name</option>
+                                    }
+                                }                                
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="specialRequests" class="form-label">Special Requests <span class="text-muted">(optional)</span></label>
+                            <textarea class="form-control" id="specialRequests" rows="3" asp-for="GuestInformation.SpecialRequests"></textarea>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-dark">Proceed to Payment</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<style>
+    /* Custom styles for the header */
+    .header-section 
+                        {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa; /* Light gray background */
+        padding: 40px 0; /* Vertical padding */
+        border-radius: 8px; /* Rounded corners */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Light shadow */
+    }
+
+    .header-section h1 {
+        font-size: 2.5rem; /* Size of the title */
+        font-weight: 700; /* Bold font */
+        color: #343a40; /* Dark gray for the title */
+        margin-bottom: 10px;
+    }
+
+    .header-section p {
+        font-size: 1.25rem; /* Size of the subtitle */
+        font-weight: 300; /* Light font */
+        color: #6c757d; /* Muted gray for the subtitle */
+        margin: 0;
+    }
+</style>

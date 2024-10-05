@@ -26,7 +26,7 @@ namespace Hotels_Booking.Areas.Admin.Controllers
 
             if (hotel == null) return BadRequest();
 
-            if(hotel.Status == Utility.Status.InProgress) return RedirectToAction("HotelList");
+            if(hotel.Status == Status.InProgress) return RedirectToAction("HotelList");
 
             var state = _unitOfWork.States.GetOne(e => e.StateId == hotel.StateId, e => e.Country);
 

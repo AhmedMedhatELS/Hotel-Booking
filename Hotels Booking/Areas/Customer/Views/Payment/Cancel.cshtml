@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Payment Canceled";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="card shadow-lg p-4 mb-5 bg-white rounded">
+                <div class="card-body">
+                    <h1 class="display-4 text-danger">Payment Canceled</h1>
+                    <i class="bi bi-x-circle-fill text-danger" style="font-size: 4rem;"></i>
+                    <p class="mt-4 lead">Your payment has been canceled. Please try again or contact support if you need assistance.</p>
+                    <p class="text-muted">We are here to help you complete your reservation.</p>
+                    <p class="text-muted">You will be redirected to the homepage in <span id="countdown">5</span> seconds...</p>
+
+                    <a asp-action="Index" asp-controller="Home" class="btn btn-danger btn-lg mt-4">
+                        <i class="bi bi-house-door-fill"></i> Return to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Set timer for 5 seconds before redirect
+    var countdownElement = document.getElementById('countdown');
+    var timeLeft = 5;
+
+    var timer = setInterval(function () {
+        timeLeft--;
+        countdownElement.textContent = timeLeft;
+
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            window.location.href = '@Url.Action("Index", "Home")';
+        }
+    }, 1000); // 1 second interval
+</script>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+</style>

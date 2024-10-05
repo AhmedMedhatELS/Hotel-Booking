@@ -10,6 +10,7 @@ using DataAccess.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Shared;
+using Stripe;
 
 namespace Hotels_Booking
 {
@@ -69,7 +70,11 @@ namespace Hotels_Booking
 
             builder.Services.AddScoped<IUserReviewRepository, UserReviewRepository>();
             #endregion
-           
+            #region Stripe
+            builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+            StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+            #endregion
+
             var app = builder.Build();
 
             #region Inteal Create Roles And 1st Admin

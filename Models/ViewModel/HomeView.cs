@@ -8,9 +8,8 @@ namespace Models.ViewModel
 {
     public class HomeView
     {
-        public int StateId { get; set; }
-        public DateTime CheckInDate { get; set; }
-        public DateTime CheckOutDate { get; set; }
+        public HomeFiltrationView HomeFiltrationView { get; set; } = null!;
         public List<HotelHomeView> HotelHomeViews { get; set; } = [];
+        public List<State> States { get; set; } = [];
     }
 }

@@ -28,6 +28,11 @@ namespace DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Hotel>()
+                .Property(h => h.Rating)
+                .HasPrecision(2, 1);
+
             #region OneToMany
             modelBuilder.Entity<Contact>()
                 .HasOne(c => c.ApplicationUser)

@@ -1,0 +1,46 @@
+﻿@{
+    ViewData["Title"] = "Reservation Canceled";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="card shadow-lg p-4 mb-5 bg-white rounded">
+                <div class="card-body">
+                    <h1 class="display-4 text-warning">Reservation Canceled</h1>
+                    <i class="bi bi-exclamation-triangle-fill text-warning" style="font-size: 4rem;"></i>
+                    <p class="mt-4 lead">We regret to inform you that your reservation has been canceled.</p>
+                    <p class="text-muted">Unfortunately, the required rooms became unavailable while processing your request. Your payment has been refunded.</p>
+                    <p class="text-muted">Please try booking again or contact support if you need assistance.</p>
+                    <p class="text-muted">You will be redirected to the homepage in <span id="countdown">10</span> seconds...</p>
+
+                    <a asp-action="Index" asp-controller="Home" class="btn btn-warning btn-lg mt-4">
+                        <i class="bi bi-house-door-fill"></i> Return to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Set timer for 5 seconds before redirect
+    var countdownElement = document.getElementById('countdown');
+    var timeLeft = 10;
+
+    var timer = setInterval(function () {
+        timeLeft--;
+        countdownElement.textContent = timeLeft;
+
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            window.location.href = '@Url.Action("Index", "Home")';
+        }
+    }, 1000); // 1 second interval
+</script>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+</style>

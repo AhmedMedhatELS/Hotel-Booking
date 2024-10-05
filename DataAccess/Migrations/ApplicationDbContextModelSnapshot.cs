@@ -337,7 +337,8 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Rating")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(2, 1)
+                        .HasColumnType("decimal(2,1)");
 
                     b.Property<int>("Stars")
                         .HasColumnType("int");
@@ -468,14 +469,29 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("CheckOutDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("PaymentDate")
+                    b.Property<int?>("CountryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("PaymentDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PaymentId")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ReservationStatus")
                         .HasColumnType("int");
+
+                    b.Property<string>("SpecialRequests")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TotalAmount")
                         .HasColumnType("int");
@@ -485,6 +501,8 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ReservationId");
+
+                    b.HasIndex("CountryId");
 
                     b.HasIndex("UserId");
 
@@ -676,6 +694,9 @@ namespace DataAccess.Migrations
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("HotelId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
@@ -686,6 +707,8 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserReviewId");
+
+                    b.HasIndex("HotelId");
 
                     b.HasIndex("ReservationId");
 
@@ -831,11 +854,17 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Models.Reservation", b =>
                 {
+                    b.HasOne("Models.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId");
+
                     b.HasOne("Models.ApplicationUser", "User")
                         .WithMany("Reservations")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("Country");
 
                     b.Navigation("User");
                 });
@@ -849,7 +878,7 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.HasOne("Models.RoomUnit", "RoomUnit")
-                        .WithMany("ReservationRoomst")
+                        .WithMany("ReservationRooms")
                         .HasForeignKey("RoomUnitId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -932,11 +961,19 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Models.UserReview", b =>
                 {
+                    b.HasOne("Models.Hotel", "Hotel")
+                        .WithMany("UserReviews")
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Models.Reservation", "Reservation")
                         .WithMany()
                         .HasForeignKey("ReservationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Hotel");
 
                     b.Navigation("Reservation");
                 });
@@ -970,6 +1007,8 @@ namespace DataAccess.Migrations
                     b.Navigation("HotelGalleries");
 
                     b.Navigation("Rooms");
+
+                    b.Navigation("UserReviews");
                 });
 
             modelBuilder.Entity("Models.LocationView", b =>
@@ -996,7 +1035,7 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Models.RoomUnit", b =>
                 {
-                    b.Navigation("ReservationRoomst");
+                    b.Navigation("ReservationRooms");
                 });
 
             modelBuilder.Entity("Models.RoomView", b =>

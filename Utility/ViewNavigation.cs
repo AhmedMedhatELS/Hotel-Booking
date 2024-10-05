@@ -12,6 +12,9 @@ namespace Utility
         NewContacts,
         ContactHistory,
         HotelRequest,
-        HotelRequestHistory
+        HotelRequestHistory,
+        AutoCancel,
+        ManagerReservation,
+        UserReservation
     }
 }

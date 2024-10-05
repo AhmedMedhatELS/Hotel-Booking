@@ -48,6 +48,8 @@ namespace Models
         public ICollection<Facility> Facilities { get; } = [];
         [ValidateNever]
         public ICollection<Room> Rooms { get; set; } = [];
+        [ValidateNever]
+        public ICollection<UserReview> UserReviews { get; set; } = [];
         #endregion
     }
 }

@@ -1,0 +1,188 @@
+﻿@page
+@using Utility
+@model ReservationModel
+@{
+    ViewData["Title"] = "Reservations";
+    ViewData["ActivePage"] = ManageNavPages.Reservation;
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-between align-items-center mb-4">
+        <div class="col-md-6">
+            <h2>Your Reservations</h2>
+        </div>
+        <div class="col-md-6 text-end">
+            <select class="form-select w-auto d-inline-block" id="filterStatus" aria-label="Filter by Status">
+                <option selected value="All">All</option>
+                <option value="Pending">Pending</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Canceled">Canceled</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="reservationCards" class="row g-4">
+        <!-- Cards will be dynamically populated here -->
+    </div>
+</div>
+
+<!-- Reservation Details Modal -->
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailsModalLabel">Reservation Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group">
+                    <li class="list-group-item"><strong>Reservation ID:</strong> <span id="resId"></span></li>
+                    <li class="list-group-item"><strong>Hotel Name:</strong> <span id="hotelName"></span></li>
+                    <li class="list-group-item"><strong>Guest Name:</strong> <span id="guestName"></span></li>
+                    <li class="list-group-item"><strong>Email:</strong> <span id="email2"></span></li>
+                    <li class="list-group-item"><strong>Phone Number:</strong> <span id="phone"></span></li>
+                    <li class="list-group-item"><strong>Check-In:</strong> <span id="checkIn"></span></li>
+                    <li class="list-group-item"><strong>Check-Out:</strong> <span id="checkOut"></span></li>
+                    <li class="list-group-item"><strong>Number of Nights:</strong> <span id="nights"></span></li>
+                    <li class="list-group-item"><strong>Number of Rooms:</strong> <span id="numRooms"></span></li>
+                    <li class="list-group-item"><strong>Status:</strong> <span id="status"></span></li>
+                    <li class="list-group-item"><strong>Total:</strong> $<span id="total"></span></li>
+                    <li class="list-group-item"><strong>Payment ID:</strong> <span id="paymentId"></span></li>
+                    <li class="list-group-item"><strong>Payment Date:</strong> <span id="paymentDate"></span></li>
+                    <li class="list-group-item"><strong>Special Requests:</strong> <span id="requests"></span></li>
+                </ul>
+                <h5 class="mt-4">Rooms</h5>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Room Type</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody id="roomList">
+                        <!-- Room details will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger">Cancel Reservation</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const reservations = JSON.parse('@Html.Raw(Model.ReservationData)');
+
+    console.log(reservations);
+
+    function loadReservations(filterStatus = 'All') {
+        const cardContainer = document.getElementById('reservationCards');
+        cardContainer.innerHTML = ''; // Clear the container
+
+        reservations.forEach(reservation => {
+            if (filterStatus === 'All' || reservation.Status === filterStatus) {
+                const card = document.createElement('div');
+                card.className = 'col-12'; // Full-width card for one per row
+
+                let statusClass = '';
+                let badgeColor = '';
+
+                switch (reservation.Status) {
+                    case 'Pending':
+                        statusClass = 'border-warning';
+                        badgeColor = 'bg-warning';
+                        break;
+                    case 'Confirmed':
+                        statusClass = 'border-success';
+                        badgeColor = 'bg-success';
+                        break;
+                    case 'Canceled':
+                        statusClass = 'border-danger';
+                        badgeColor = 'bg-danger';
+                        break;
+                }
+
+                card.innerHTML = `
+                           <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px;">
+        <div class="card-body d-flex flex-column flex-lg-row justify-content-between align-items-start">
+            <!-- Left section with hotel and reservation info -->
+            <div class="mb-3 mb-lg-0">
+                    <h3 class="card-title fw-bold" style="color: #4A4A4A;">${reservation.HotelName}  <span class="badge ${badgeColor} p-1" style="font-size: 1rem; border-radius: 8px;">${reservation.Status}</span>
+                   </h3>
+
+                <p class="card-text mb-2 text-muted">
+                    <strong class="text-dark">Check-In:</strong> ${reservation.CheckInDate} <br>
+                    <strong class="text-dark">Check-Out:</strong> ${reservation.CheckOutDate} <br>
+                    <strong class="text-dark">Total:</strong> $${reservation.Total}
+                </p>
+            </div>
+            <!-- Right section with status and button -->
+            <div class="d-flex flex-column justify-content-between align-items-lg-end" style="height: 100%;">
+                <div class="mt-auto">
+                        <button class="btn btn-dark px-4 py-2" style="border-radius: 6px;margin-top:100px;" onclick="showDetails(${reservation.ReservationId})">View Details</button>
+                </div>
+            </div>
+        </div>
+    </div>
+                    `;
+                cardContainer.appendChild(card);
+            }
+        });
+    }
+
+    function showDetails(reservationId) {
+        const reservation = reservations.find(res => res.ReservationId === reservationId);
+        if (reservation) {
+            document.getElementById('resId').textContent = reservation.ReservationId;
+            document.getElementById('hotelName').textContent = reservation.HotelName;
+            document.getElementById('guestName').textContent = reservation.GuestName;
+            document.getElementById('email2').textContent = reservation.Email;
+            document.getElementById('phone').textContent = reservation.Phone;
+            document.getElementById('checkIn').textContent = reservation.CheckInDate;
+            document.getElementById('checkOut').textContent = reservation.CheckOutDate;
+            document.getElementById('nights').textContent = reservation.Nights;
+            document.getElementById('numRooms').textContent = reservation.NumRooms;
+            document.getElementById('status').textContent = reservation.Status;
+            document.getElementById('total').textContent = reservation.Total;
+            document.getElementById('paymentId').textContent = reservation.PaymentId;
+            document.getElementById('paymentDate').textContent = reservation.PaymentDate;
+            document.getElementById('requests').textContent = reservation.Requests;
+
+            const roomList = document.getElementById('roomList');
+            roomList.innerHTML = '';
+            reservation.Rooms.forEach(room => {
+                const roomRow = document.createElement('tr');
+                roomRow.innerHTML = `
+                        <td>${room.Name}</td>
+                        <td>${room.Quantity}</td>
+                    `;
+                roomList.appendChild(roomRow);
+            });
+
+            const modalFooter = document.querySelector('.modal-footer');
+            modalFooter.innerHTML = `
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                `;
+
+            if (reservation.Status === 'Pending') {
+                modalFooter.innerHTML += `
+                              <a type="button" class="btn btn-danger" href="/HotelManager/Reservation/UserCancel?id=${reservation.ReservationId}">Cancel Reservation</a>
+                `;
+            }
+
+            new bootstrap.Modal(document.getElementById('detailsModal')).show();
+        }
+    }
+
+    document.getElementById('filterStatus').addEventListener('change', function () {
+        loadReservations(this.value);
+    });
+
+    loadReservations();
+</script>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

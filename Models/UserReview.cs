@@ -16,11 +16,13 @@ namespace Models
         #endregion
 
         #region Foreign Keys
-        public int ReservationId { get; set; }  
+        public int ReservationId { get; set; }
+        public int HotelId { get; set; }
         #endregion
 
         #region Relations
-        public Reservation? Reservation { get; set; }  
+        public Reservation Reservation { get; set; } = null!;
+        public Hotel Hotel { get; set; } = null!;
         #endregion
     }
 

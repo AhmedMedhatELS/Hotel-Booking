@@ -18,7 +18,7 @@ namespace Models
 
         #region Relations
         public RoomView RoomView { get; set; } = null!;
-        public ICollection<ReservationRoom> ReservationRoomst { get; set; } = [];
+        public ICollection<ReservationRoom> ReservationRooms { get; set; } = [];
         #endregion
     }
 }

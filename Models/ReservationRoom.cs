@@ -18,8 +18,8 @@ namespace Models
         #endregion
 
         #region Relations
-        public Reservation? Reservation { get; set; }
-        public RoomUnit? RoomUnit { get; set; }
+        public Reservation Reservation { get; set; } = null!;
+        public RoomUnit RoomUnit { get; set; } = null!;
         #endregion
     }
 }
