@@ -4,6 +4,7 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241006203222_AddstatusandnameColumnToUserReview")]
+    partial class AddstatusandnameColumnToUserReview
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -475,9 +478,6 @@ namespace DataAccess.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsReviewOn")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -719,8 +719,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("HotelId");
 
-                    b.HasIndex("ReservationId")
-                        .IsUnique();
+                    b.HasIndex("ReservationId");
 
                     b.ToTable("UserReviews");
                 });
@@ -978,8 +977,8 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.HasOne("Models.Reservation", "Reservation")
-                        .WithOne("UserReview")
-                        .HasForeignKey("Models.UserReview", "ReservationId")
+                        .WithMany()
+                        .HasForeignKey("ReservationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1031,8 +1030,6 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("Models.Reservation", b =>
                 {
                     b.Navigation("ReservationRooms");
-
-                    b.Navigation("UserReview");
                 });
 
             modelBuilder.Entity("Models.Room", b =>

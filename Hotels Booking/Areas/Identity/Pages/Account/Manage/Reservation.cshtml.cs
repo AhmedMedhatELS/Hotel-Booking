@@ -25,12 +25,10 @@ namespace Hotels_Booking.Areas.Identity.Pages.Account.Manage
     [Authorize]
     public class ReservationModel(
         UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager,
         IUnitOfWork unitOfWork) : PageModel
     {
         #region Start Up
         private readonly UserManager<ApplicationUser> _userManager = userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
         public string ReservationData { get; set; }

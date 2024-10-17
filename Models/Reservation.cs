@@ -21,6 +21,7 @@ namespace Models
         public string? PhoneNumber { get; set; }
         public string? SpecialRequests { get; set; }
         public ReservationStatus ReservationStatus { get; set; } = ReservationStatus.Booking;
+        public bool IsReviewOn { get; set; } = true;
         #endregion
 
         #region Foreign Keys
@@ -32,6 +33,7 @@ namespace Models
         public ApplicationUser User { get; set; } = null!;
         public Country Country { get; set; } = null!;
         public ICollection<ReservationRoom> ReservationRooms { get; set; } = [];
+        public UserReview? UserReview { get; set; }
         #endregion
     }
 }

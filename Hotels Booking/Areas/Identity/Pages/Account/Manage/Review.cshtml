@@ -1,0 +1,165 @@
+﻿@page
+@using Utility
+@model ReviewModel
+@{
+    ViewData["Title"] = "Review";
+    ViewData["ActivePage"] = ManageNavPages.Review;
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Your Reviews</h2>
+    <div class="row">
+        @foreach (var review in Model.ReviewProfileViews)
+        {
+            // Assign values to the InputModel here
+            Model.Input.Review = review.Review ?? "";
+            Model.Input.Name = review.Name ?? " ";
+            Model.Input.Rating = review.Rating;
+            Model.Input.ReviewId = review.ReviewId;
+
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@review.HotelName</h5>
+                        <p class="card-text"><strong>Check-in:</strong> @review.CheckInDate</p>
+                        <p class="card-text"><strong>Check-out:</strong> @review.CheckOutDate</p>
+
+                        <!-- Review form -->
+                        @if (review.Status == ReviewStatus.InProgress || review.Status == ReviewStatus.Approved || review.Status == ReviewStatus.Rejected)
+                        {
+                            <form method="post">
+                                <!-- Name Field -->
+                                <div class="mb-3">
+                                    <label asp-for="Input.Name" class="form-label"></label>
+                                    <input type="text" class="form-control" asp-for="Input.Name" />
+                                    <span asp-validation-for="Input.Name" class="text-danger"></span>
+                                </div>
+
+                                <!-- Interactive Rating Field -->
+                                <div class="mb-3">
+                                    <label class="form-label">Rating</label>
+                                    <div class="star-rating" data-rating="@review.Rating">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            <span class="fa fa-star" data-value="@i"></span>
+                                        }
+                                    </div>
+                                    <input type="hidden" asp-for="Input.Rating" id="RatingValue" />
+                                    <span asp-validation-for="Input.Rating" class="text-danger"></span>
+                                </div>
+
+                                <!-- Review Field -->
+                                <div class="mb-3">
+                                    <label asp-for="Input.Review" class="form-label"></label>
+                                    <textarea class="form-control" asp-for="Input.Review" rows="3"></textarea>
+                                    <span asp-validation-for="Input.Review" class="text-danger"></span>
+                                </div>
+
+                                <input type="hidden" asp-for="Input.ReviewId" />
+                                <!-- Buttons row (Delete always visible, Submit only for editable reviews) -->
+                                <div class="d-flex justify-content-between mt-3">
+                                    <a asp-page-handler="DeleteReview" asp-route-ReviewId="@review.ReviewId" class="btn btn-danger">Delete</a>
+                                    <button type="submit" class="btn btn-primary">Save Changes</button>                                    
+                                </div>
+                            </form>
+                        }
+                        else
+                        {
+                            <!-- Display the same fields, but make them readonly -->
+                            <div class="mb-3">
+                                <label asp-for="Input.Name" class="form-label"></label>
+                                <input type="text" class="form-control" asp-for="Input.Name" readonly />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Rating</label>
+                                <div>
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <span class="fa fa-star @(i <= review.Rating ? "text-warning" : "")"></span>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Input.Review" class="form-label"></label>
+                                <textarea class="form-control" asp-for="Input.Review" rows="3" readonly></textarea>
+                            </div>
+                            <a asp-page-handler="DeleteReview" asp-route-ReviewId="@review.ReviewId" class="btn btn-danger">Delete</a>
+                        }                       
+
+                        <!-- Review Status -->
+                        <p class="mt-3">
+                            <strong>Status:</strong>
+                            @if (review.Status == ReviewStatus.Pending || review.Status == ReviewStatus.Edited)
+                            {
+                                <span class="badge bg-warning text-dark">@review.Status</span>
+                            }
+                            else if (review.Status == ReviewStatus.InProgress)
+                            {
+                                <span class="badge bg-primary">@review.Status</span>
+                            }
+                            else if (review.Status == ReviewStatus.Approved)
+                            {
+                                <span class="badge bg-success">@review.Status</span>
+                            }
+                            else if (review.Status == ReviewStatus.Rejected)
+                            {
+                                <span class="badge bg-danger">@review.Status</span>
+                            }
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Find all star rating divs
+            const starRatings = document.querySelectorAll('.star-rating');
+
+            starRatings.forEach(function (ratingDiv) {
+                const stars = ratingDiv.querySelectorAll('.fa-star');
+                const ratingInput = ratingDiv.nextElementSibling; // Hidden input to store the rating value
+                let currentRating = parseInt(ratingDiv.getAttribute('data-rating')) || 0;
+
+                // Function to highlight stars based on rating value
+                function highlightStars(rating) {
+                    stars.forEach((star, index) => {
+                        if (index < rating) {
+                            star.classList.add('text-warning');
+                        } else {
+                            star.classList.remove('text-warning');
+                        }
+                    });
+                }
+
+                // Initial highlight based on currentRating
+                highlightStars(currentRating);
+
+                // Hover effect
+                stars.forEach((star, index) => {
+                    star.addEventListener('mouseover', function () {
+                        highlightStars(index + 1);
+                    });
+
+                    star.addEventListener('mouseout', function () {
+                        highlightStars(currentRating); // Reset to the current rating
+                    });
+
+                    // Click to set the rating
+                    star.addEventListener('click', function () {
+                        currentRating = index + 1;
+                        ratingInput.value = currentRating; // Update hidden input value
+                        highlightStars(currentRating);
+                    });
+                });
+            });
+        });
+    </script>
+}
