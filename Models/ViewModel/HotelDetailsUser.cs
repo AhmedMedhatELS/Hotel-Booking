@@ -12,5 +12,6 @@ namespace Models.ViewModel
         public HotelDetailsFiltrationn? HotelDetailsFiltrationn { get; set; }
         public List<LocationView> LocationViews { get; set; } = [];
         public List<RoomType> RoomTypes { get; set; } = [];
+        public List<ReviewHotelUser> ReviewHotelUsers { get; set; } = [];
     }
 }

@@ -163,7 +163,7 @@ namespace Hotels_Booking.Areas.Identity.Pages.Account.Manage
         #region Delete Review
         public IActionResult OnGetDeleteReviewAsync()
         {
-            #region cheack the vvalition of the data
+            #region cheack the valition of the data
             if (ReviewId == 0) return BadRequest();
 
             var userId = _userManager.GetUserId(User);

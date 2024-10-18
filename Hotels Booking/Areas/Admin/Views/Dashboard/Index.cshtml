@@ -1,114 +1,130 @@
-﻿@{
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
     Layout = "_Dashboard";
     ViewData["Title"] = "Admin Dashboard";
 }
 
-<!-- Dashboard Title -->
-<div class="container mt-4">
-    <h1 class="text-center mb-4">Welcome to the Admin Dashboard</h1>
+<div class="container mt-5">
+    <div class="card shadow-lg border-0 rounded">
+        <div class="card-body p-5">
+            <h2 class="text-center mb-4">Welcome to the Admin Dashboard</h2>
+            <p class="lead text-center">Manage your Booking Hotels Site with ease using the features provided below.</p>
 
-    <!-- Dashboard Overview Cards -->
-    <div class="row">
-        <!-- Total Hotels -->
-        <div class="col-md-4 mb-3">
-            <div class="card bg-primary text-white">
-                <div class="card-body">
-                    <h5 class="card-title">Total Hotels</h5>
-                    <p class="card-text">123</p> <!-- Replace with dynamic value -->
+            <div class="row mt-4">
+                <!-- Home -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 text-center bg-dark text-white">
+                        <div class="card-body">
+                            <i class="fas fa-home fa-2x mb-3"></i>
+                            <h5 class="card-title">Home</h5>
+                            <p class="card-text">Go to the home page</p>
+                            <br />
+                            <a asp-area="Customer" asp-controller="Home" asp-action="Index" class="btn btn-outline-light">Go</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-footer bg-primary text-white">
-                    <a href="@Url.Action("Hotels", "Dashboard")" class="text-white">View Details</a>
-                </div>
-            </div>
-        </div>
 
-        <!-- Pending Requests -->
-        <div class="col-md-4 mb-3">
-            <div class="card bg-warning text-dark">
-                <div class="card-body">
-                    <h5 class="card-title">Pending Requests</h5>
-                    <p class="card-text">45</p> <!-- Replace with dynamic value -->
+                <!-- Add New Admin -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 text-center bg-dark text-white">
+                        <div class="card-body">
+                            <i class="fas fa-user-plus fa-2x mb-3"></i>
+                            <h5 class="card-title">Add New Admin</h5>
+                            <p class="card-text">Register new administrators to help manage the site.</p>
+                            <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-outline-light">Add</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-footer bg-warning text-dark">
-                    <a href="@Url.Action("PendingRequests", "Dashboard")" class="text-dark">View Details</a>
-                </div>
-            </div>
-        </div>
 
-        <!-- Total Users -->
-        <div class="col-md-4 mb-3">
-            <div class="card bg-success text-white">
-                <div class="card-body">
-                    <h5 class="card-title">Total Users</h5>
-                    <p class="card-text">789</p> <!-- Replace with dynamic value -->
+                <!-- New Contacts -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 text-center bg-dark text-white">
+                        <div class="card-body">
+                            <i class="fas fa-envelope fa-2x mb-3"></i>
+                            <h5 class="card-title">New Contacts</h5>
+                            <p class="card-text">View new user messages and respond to them.</p>
+                            <a asp-area="Admin" asp-controller="Dashboard" asp-action="NewContacts" class="btn btn-outline-light">View</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-footer bg-success text-white">
-                    <a href="@Url.Action("Users", "Dashboard")" class="text-white">View Details</a>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Charts and Statistics -->
-    <div class="row">
-        <!-- Sales Chart (Placeholder) -->
-        <div class="col-md-6 mb-3">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title">Sales Overview</h5>
+                <!-- Contact History -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 text-center bg-dark text-white">
+                        <div class="card-body">
+                            <i class="fas fa-envelope fa-2x mb-3"></i>
+                            <h5 class="card-title">Contact History</h5>
+                            <p class="card-text">Review all past user contacts and responses.</p>
+                            <a asp-area="Admin" asp-controller="Dashboard" asp-action="ContactsHistory" class="btn btn-outline-light">View History</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <!-- Placeholder for chart -->
-                    <div id="salesChart" style="height: 300px;"></div>
-                </div>
-            </div>
-        </div>
 
-        <!-- User Activity (Placeholder) -->
-        <div class="col-md-6 mb-3">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title">User Activity</h5>
+                <!-- Hotel Request -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 text-center bg-dark text-white">
+                        <div class="card-body">
+                            <i class="fas fa-hotel fa-2x mb-3"></i>
+                            <h5 class="card-title">Hotel Requests</h5>
+                            <p class="card-text">Review and approve hotel requests.</p>
+                            <br />
+                            <a asp-area="Admin" asp-controller="Dashboard" asp-action="NewHotelRequest" class="btn btn-outline-light">Manage</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <!-- Placeholder for activity chart -->
-                    <div id="userActivityChart" style="height: 300px;"></div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Recent Notifications -->
-    <div class="row">
-        <div class="col-md-12 mb-3">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title">Recent Notifications</h5>
+                <!-- Hotel Request History -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 text-center bg-dark text-white">
+                        <div class="card-body">
+                            <i class="fas fa-hotel fa-2x mb-3"></i>
+                            <h5 class="card-title">Hotel Request History</h5>
+                            <p class="card-text">Review all past hotel requests and approvals.</p>
+                            <a asp-area="Admin" asp-controller="Dashboard" asp-action="HotelRequestHistory" class="btn btn-outline-light">View History</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <ul class="list-group">
-                        <li class="list-group-item">Hotel XYZ has a new booking request.</li>
-                        <li class="list-group-item">User ABC updated their profile.</li>
-                        <li class="list-group-item">New feedback received for Hotel DEF.</li>
-                        <!-- Add more notifications dynamically -->
-                    </ul>
+
+                <!-- Hotel List -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 text-center bg-dark text-white">
+                        <div class="card-body">
+                            <i class="fas fa-hotel fa-2x mb-3"></i>
+                            <h5 class="card-title">Hotel List</h5>
+                            <p class="card-text">Manage and view all registered hotels.</p>
+                            <br />
+                            <a asp-area="Admin" asp-controller="HotelAdminManagement" asp-action="HotelList" class="btn btn-outline-light">View List</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- All Reservations -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 text-center bg-dark text-white">
+                        <div class="card-body">
+                            <i class="fas fa-concierge-bell fa-2x mb-3"></i>
+                            <h5 class="card-title">All Reservations</h5>
+                            <p class="card-text">Manage all hotel reservations.</p>
+                            <br />
+                            <a asp-area="Admin" asp-controller="Reservation" asp-action="AllResrevationHotel" class="btn btn-outline-light">Manage</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- All Reviews -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 text-center bg-dark text-white">
+                        <div class="card-body">
+                            <i class="fas fa-star fa-2x mb-3"></i>
+                            <h5 class="card-title">All Reviews</h5>
+                            <p class="card-text">Check all user reviews and respond.</p>
+                            <br />
+                            <a asp-area="Admin" asp-controller="Review" asp-action="Reviews" class="btn btn-outline-light">Manage</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-@section Scripts {
-    <script>
-        // Example code to initialize charts
-        document.addEventListener('DOMContentLoaded', function () {
-            // Sales chart
-            var salesChart = document.getElementById('salesChart');
-            // Initialize chart library and populate chart (e.g., Chart.js, ApexCharts)
-
-            // User activity chart
-            var userActivityChart = document.getElementById('userActivityChart');
-            // Initialize chart library and populate chart
-        });
-    </script>
-}

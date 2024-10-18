@@ -108,7 +108,7 @@ namespace Hotels_Booking.Areas.Customer.Controllers
         #endregion
         #region Hotel Details
         [Authorize]
-        public IActionResult Hotel(HotelDetailsFiltrationn HotelDetailsFiltrationn)
+        public async Task<IActionResult> Hotel(HotelDetailsFiltrationn HotelDetailsFiltrationn)
         {
             #region Check If the Sended Data Is Vailed
             if (
@@ -143,12 +143,40 @@ namespace Hotels_Booking.Areas.Customer.Controllers
                     e => e.Facilities,
                     e => e.State,
                     e => e.State.Country,
-                    e => e.HotelGalleries,
-                    e => e.UserReviews
+                    e => e.HotelGalleries
                 )
             };
 
             if (HotelDetails.Hotel == null) return BadRequest();
+            #endregion
+
+            #region get hotel reviews
+            var reviews = _unitOfWork.UserReviews.Get(
+                e => 
+                    e.HotelId == HotelDetailsFiltrationn.HotelId &&
+                    e.ReviewStatus == ReviewStatus.Approved,
+                reservation => reservation.Reservation
+                ).ToList();
+
+            foreach(var review in reviews)
+            {
+                #region get user
+                var user = await _userManager.FindByIdAsync(review.Reservation.UserId);
+
+                if (user == null) continue;
+                #endregion
+
+                var reviewview = new ReviewHotelUser
+                {
+                    Name = review.Name ?? "",
+                    Review = review.Review ?? "",
+                    CreatedAt = review.CreatedAt?.ToString("yyyy-MM-dd") ?? "",
+                    Rating = review.Rating,
+                    UserProfilePhoto = user.ProfileImage
+                };
+
+                HotelDetails.ReviewHotelUsers.Add(reviewview);
+            }
             #endregion
 
             #region Rooms Filteration

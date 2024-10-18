@@ -35,12 +35,7 @@
                 <!-- Links and Call to Action -->
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <!-- Left Side Navigation Links -->
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">                        
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="javascript:void(0)" @* asp-area="Customer" asp-controller="Booking" asp-action="Search" *@>
-                                <i class="bi bi-search me-1"></i> Search Hotels
-                            </a>
-                        </li>
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">                 
                         @if (!SignInManager.IsSignedIn(User) || User.IsInRole("User"))
                         {
                             <li class="nav-item">
@@ -101,7 +96,10 @@
                     <ul class="list-unstyled">
                         <li><a asp-area="Customer" asp-controller="Home" asp-action="Index" class="text-light">Home</a></li>
                         <li><a href="javascript:void(0)" @* asp-area="Customer" asp-controller="Booking" asp-action="Search" *@ class="text-light">Search Hotels</a></li>
-                        <li><a asp-area="Customer" asp-controller="Home" asp-action="Contact" class="text-light">Contact Us</a></li>
+                        @if (!SignInManager.IsSignedIn(User) || User.IsInRole("User"))
+                        {
+                            <li><a asp-area="Customer" asp-controller="Home" asp-action="Contact" class="text-light">Contact Us</a></li>
+                        }
                         <li><a href="javascript:void(0)" @* asp-area="Customer" asp-controller="Home" asp-action="FAQ" *@ class="text-light">FAQ</a></li>
                         <li><a asp-area="Customer" asp-controller="Home" asp-action="Privacy" class="text-light">Privacy Policy</a></li>
                     </ul>

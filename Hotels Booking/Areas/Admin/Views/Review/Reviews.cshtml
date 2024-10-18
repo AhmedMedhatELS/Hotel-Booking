@@ -1,0 +1,70 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Utility;
+@using Models.ViewModel;
+
+@model List<ReviewAdminView>
+
+@{
+    Layout = "_Dashboard";
+    ViewData["Title"] = "Users Reviews";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        @foreach (var review in Model)
+        {
+            <div class="col-md-6">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-5">
+                            <img src="~/images/users/@(review.UserProfilePhoto == null ? "profile-circle.svg" : review.UserProfilePhoto)" alt="User Photo" class="rounded-circle me-3" style="width: 50px; height: 50px;">
+                            <h5 class="card-title">@review.Name</h5>
+                        </div>
+
+                        <p class="card-text"><strong>Review:</strong> @review.Review</p>
+                        <p class="card-text"><strong>Rating:</strong> @review.Rating / 5</p>
+                        <p class="card-text"><strong>Hotel:</strong> @review.HotelName</p>
+                        <p class="card-text"><strong>Check-in:</strong> @review.CheckInDate</p>
+                        <p class="card-text"><strong>Check-out:</strong> @review.CheckOutDate</p>
+                        <p class="card-text"><strong>Review Status:</strong> @review.ReviewStatus</p>
+                        <p class="card-text"><small class="text-muted">Submitted on @review.CreatedAt</small></p>
+
+                        <!-- Form for admin response -->
+                        <form asp-action="SendReviewResponse" method="post">
+                            <input type="hidden" name="ReviewId" value="@review.ReviewId" />
+
+                            <div class="mb-3">
+                                <label for="Response" class="form-label">Write a response:</label>
+                                <textarea required class="form-control" id="Response" name="Response" rows="3" placeholder="Write your response to the user"></textarea>
+                            </div>
+
+                            <!-- Select list for Review Status -->
+                            <div class="mb-3">
+                                <label for="reviewStatus" class="form-label">Review Status:</label>
+                                <select class="form-select" id="reviewStatus" name="ReviewStatus" required>
+                                    <option value="">Choose Status</option>
+                                    <option value="@ReviewStatus.Approved">@ReviewStatus.Approved</option>
+                                    <option value="@ReviewStatus.Rejected">@ReviewStatus.Rejected</option>
+                                </select>
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="d-flex justify-content-between">
+                                <button type="submit" class="btn btn-primary">Send Response</button>
+
+                                <!-- Delete button -->
+                                <a asp-action="DeleteReview" asp-route-reviewId="@review.ReviewId" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this review?');">
+                                    Delete Review
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -84,46 +84,33 @@
                 <h4 class="mb-2">User Reviews</h4>
                 <div id="userReviewsCarousel" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner">
-                        <!-- Review 1 -->
-                        <div class="carousel-item active">
-                            <div class="d-flex flex-column">
-                                <div class="d-flex align-items-start mb-3">
-                                    <img src="~/images/users/49b88219-2da2-4255-aad2-049424990a85.jpg" style="width:60px;height:60px;" class="rounded-circle me-3" alt="User Image">
-                                    <div>
-                                        <strong>John Doe</strong>
-                                        <span class="text-muted"> - <span class="text-warning">5/5</span></span>
-                                        <p class="mb-0 text-muted"><small>Reviewed on: 2024-09-15</small></p>
+                        <!-- Reviews -->
+                        @if (Model?.ReviewHotelUsers.Count > 0)
+                        {
+                            var IsFirst = true;
+
+                            @foreach(var review in Model.ReviewHotelUsers)
+                            {
+                                <div class="carousel-item @(IsFirst == true ?  "active" : "" )">
+                                    <div class="d-flex flex-column">
+                                        <div class="d-flex align-items-start mb-3">
+                                            <img src="~/images/users/@(review.UserProfilePhoto == null ? "profile-circle.svg" : review.UserProfilePhoto)" style="width:60px;height:60px;" class="rounded-circle me-3" alt="User Image">
+                                            <div>
+                                                <strong>@review.Name</strong>
+                                                <span class="text-muted"> - <span class="text-warning">@review.Rating / 5</span></span>
+                                                <p class="mb-0 text-muted"><small>Reviewed on: @review.CreatedAt</small></p>
+                                            </div>
+                                        </div>
+                                        <p class="mb-0 review-text">
+                                            <i class="bi bi-chat-dots text-primary"></i>
+                                            @review.Review
+                                        </p>
                                     </div>
                                 </div>
-                                <p class="mb-0 review-text">
-                                    <i class="bi bi-chat-dots text-primary"></i>
-                                    Excellent service, very clean, and perfect location. Loved it!
-                                    Excellent service, very clean, and perfect location. Loved it!
-                                    Excellent service, very clean, and perfect location. Loved it!
-                                    Excellent service, very clean, and perfect location. Loved it!
-                                </p>
-                            </div>
-                        </div>
 
-                        <!-- Review 2 -->
-                        <div class="carousel-item">
-                            <div class="d-flex flex-column">
-                                <div class="d-flex align-items-start mb-3">
-                                    <img src="~/images/users/profile-circle.svg" style="width:60px;height:60px;" class="rounded-circle me-3" alt="User Image">
-                                    <div>
-                                        <strong>Jane Smith</strong>
-                                        <span class="text-muted"> - <span class="text-warning">4/5</span></span>
-                                        <p class="mb-0 text-muted"><small>Reviewed on: 2024-09-14</small></p>
-                                    </div>
-                                </div>
-                                <p class="mb-0 review-text">
-                                    <i class="bi bi-chat-dots text-primary"></i>
-                                    Great hotel, but the pool was smaller than expected.
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- Add more reviews here as needed -->
+                                IsFirst = false;
+                            }
+                        }                        
                     </div>
 
                     <!-- Review navigation buttons -->
