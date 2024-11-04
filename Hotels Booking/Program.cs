@@ -50,25 +50,25 @@ namespace Hotels_Booking
             #region Models Services
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            builder.Services.AddScoped<ICountryRepository, CountryRepository>();
-            builder.Services.AddScoped<IStateRepository, StateRepository>();
-            builder.Services.AddScoped<IContactRepository, ContactRepository>();
-            builder.Services.AddScoped<IFacilityRepository, FacilityRepository>();            
-            builder.Services.AddScoped<IHotelGalleryRepository, HotelGalleryRepository>();
+            //builder.Services.AddScoped<ICountryRepository, CountryRepository>();
+            //builder.Services.AddScoped<IStateRepository, StateRepository>();
+            //builder.Services.AddScoped<IContactRepository, ContactRepository>();
+            //builder.Services.AddScoped<IFacilityRepository, FacilityRepository>();            
+            //builder.Services.AddScoped<IHotelGalleryRepository, HotelGalleryRepository>();
             
-            builder.Services.AddScoped<IHotelRepository, HotelRepository>();
-            builder.Services.AddScoped<IHotelRequestRepository, HotelRequestRepository>();
-            builder.Services.AddScoped<ILocationViewRepository, LocationViewRepository>();
-            builder.Services.AddScoped<IReservationRepository, ReservationRepository>();            
-            builder.Services.AddScoped<IReservationRoomRepository, ReservationRoomRepository>();
+            //builder.Services.AddScoped<IHotelRepository, HotelRepository>();
+            //builder.Services.AddScoped<IHotelRequestRepository, HotelRequestRepository>();
+            //builder.Services.AddScoped<ILocationViewRepository, LocationViewRepository>();
+            //builder.Services.AddScoped<IReservationRepository, ReservationRepository>();            
+            //builder.Services.AddScoped<IReservationRoomRepository, ReservationRoomRepository>();
             
-            builder.Services.AddScoped<IRoomGalleryRepository, RoomGalleryRepository>();
-            builder.Services.AddScoped<IRoomRepository, RoomRepository>();
-            builder.Services.AddScoped<IRoomTypeRepository, RoomTypeRepository>();
-            builder.Services.AddScoped<IRoomUnitRepository, RoomUnitRepository>();            
-            builder.Services.AddScoped<IRoomViewRepository, RoomViewRepository>();
+            //builder.Services.AddScoped<IRoomGalleryRepository, RoomGalleryRepository>();
+            //builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+            //builder.Services.AddScoped<IRoomTypeRepository, RoomTypeRepository>();
+            //builder.Services.AddScoped<IRoomUnitRepository, RoomUnitRepository>();            
+            //builder.Services.AddScoped<IRoomViewRepository, RoomViewRepository>();
 
-            builder.Services.AddScoped<IUserReviewRepository, UserReviewRepository>();
+            //builder.Services.AddScoped<IUserReviewRepository, UserReviewRepository>();
             #endregion
             #region Stripe
             builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));

@@ -21,7 +21,9 @@
                             <h5 class="card-title">@review.Name</h5>
                         </div>
 
-                        <p class="card-text"><strong>Review:</strong> @review.Review</p>
+                        <p class="card-text"><strong>Review:</strong></p>
+                        <textarea class="form-control" style="resize: none;" rows="2" readonly>@review.Review</textarea>
+                        <br />
                         <p class="card-text"><strong>Rating:</strong> @review.Rating / 5</p>
                         <p class="card-text"><strong>Check-in:</strong> @review.CheckInDate</p>
                         <p class="card-text"><strong>Check-out:</strong> @review.CheckOutDate</p>
